@@ -1,3 +1,4 @@
+import { AIHistoryGuideSection } from "@/components/AIHistoryGuideSection";
 import { ExploreHeritageSection } from "@/components/ExploreHeritageSection";
 import { TimeMachineSection } from "@/components/TimeMachineSection";
 import { APP_TITLE } from "@/lib/app-config";
@@ -89,11 +90,12 @@ export default function HomeRoute() {
           <a href="#timeline" className="inline-flex w-fit items-center gap-3 border-b border-[#d7b879]/60 pb-2 text-xs uppercase tracking-[.16em] text-[#f0dfbc] transition-colors hover:text-[#e8c577]">Enter the time machine <span aria-hidden="true">↗</span></a>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
-          {[["#timeline", "Time Machine", "Journey through the ages"], ["#guide", "AI History Guide", "Ask the stories that shaped us"], ["#quiz", "Test Your Knowledge", "A little history, a little wonder"]].map(([href, title, caption]) => <a id={href === "#timeline" ? undefined : href.slice(1)} key={title} href={href} className="rounded-lg border border-[#d7b879]/15 bg-[#211e19] p-5 transition-all hover:border-[#d7b879]/50 hover:bg-[#29241c]"><span className="font-serif text-lg text-[#e7d4ac]">{title}</span><span className="mt-1 block text-xs text-[#eee6d7]/55">{caption}</span></a>)}
+          {[["#timeline", "Time Machine", "Journey through the ages"], ["#guide", "AI History Guide", "Ask the stories that shaped us"], ["#quiz", "Test Your Knowledge", "A little history, a little wonder"]].map(([href, title, caption]) => <a id={href === "#timeline" || href === "#guide" ? undefined : href.slice(1)} key={title} href={href} className="rounded-lg border border-[#d7b879]/15 bg-[#211e19] p-5 transition-all hover:border-[#d7b879]/50 hover:bg-[#29241c]"><span className="font-serif text-lg text-[#e7d4ac]">{title}</span><span className="mt-1 block text-xs text-[#eee6d7]/55">{caption}</span></a>)}
           <span id="voice" className="sr-only">Voice Assistant</span><span id="profile" className="sr-only">Profile</span>
         </div>
       </section>
       <TimeMachineSection />
+      <AIHistoryGuideSection />
       <footer className="border-t border-[#d7b879]/10 px-5 py-6 text-center text-[10px] uppercase tracking-[.22em] text-[#eee6d7]/35">TimeTravel Heritage Explorer <span className="mx-2 text-[#d7b879]/50">·</span> Explore Forgotten Places. Travel Through Time. Discover Our History.</footer>
     </main>
   );
