@@ -38,14 +38,14 @@ visual direction — read and preserve them on every subsequent build; do not
 re-derive a new direction. The first UI pass must fill these fields in as
 part of that build, not leave them as an empty template.
 
-- Product mode: `operate` | `read` | `persuade` | `experience`
-- Audience and cadence:
-- Visual world (name + the feeling it creates):
-- Palette family + neutral undertone:
-- Type treatment:
-- Composition:
-- Shape language:
-- Anti-references (defaults this app must not drift toward):
+- Product mode: `experience`
+- Audience and cadence: Curious travelers and history enthusiasts exploring at their own pace.
+- Visual world (name + the feeling it creates): Cinematic digital heritage museum; immersive, contemplative, and transportive.
+- Palette family + neutral undertone: Charcoal and deep brown with antique gold accents and parchment warmth.
+- Type treatment: Oversized Georgia serif display headings paired with crisp Inter sans-serif navigation and body copy.
+- Composition: Full-bleed historical photography, layered dark gradients, spacious editorial hero, then compact discovery metrics and links.
+- Shape language: Refined rounded capsules and cards with fine gold borders and restrained motion.
+- Anti-references (defaults this app must not drift toward): Generic gray SaaS dashboards, bright white layouts, playful cartoon history, dense text walls, or noisy animation.
 
 ## Agent-Native is structural, not visual
 
