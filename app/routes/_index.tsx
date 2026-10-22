@@ -1,3 +1,4 @@
+import { ExploreHeritageSection } from "@/components/ExploreHeritageSection";
 import { APP_TITLE } from "@/lib/app-config";
 
 const navItems = [
@@ -78,6 +79,7 @@ export default function HomeRoute() {
             <p className="font-serif text-3xl text-[#e7cb8e] md:text-4xl">{stat.value}</p><p className="mt-2 text-xs tracking-wide text-[#eee6d7]/60">{stat.label}</p>
           </article>)}
         </div>
+        <ExploreHeritageSection />
       </section>
 
       <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10 xl:px-16">
