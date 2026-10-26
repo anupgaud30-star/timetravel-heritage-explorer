@@ -2,9 +2,11 @@ import { AIHistoryGuideSection } from "@/components/AIHistoryGuideSection";
 import { ExploreHeritageSection } from "@/components/ExploreHeritageSection";
 import { HistoryQuizSection } from "@/components/HistoryQuizSection";
 import { KnowledgeExplorerSection } from "@/components/KnowledgeExplorerSection";
+import { ProfileDashboardSection } from "@/components/ProfileDashboardSection";
 import { TimeMachineSection } from "@/components/TimeMachineSection";
 import { VoiceCompanionSection } from "@/components/VoiceCompanionSection";
 import { APP_TITLE } from "@/lib/app-config";
+import { useProfileActivity } from "@/lib/profile-activity";
 
 const navItems = [
   ["Home", "#home"],
@@ -32,6 +34,8 @@ export function meta() {
 }
 
 export default function HomeRoute() {
+  const profile = useProfileActivity();
+
   return (
     <main id="home" className="min-h-screen bg-[#171512] text-[#f6f0e4]">
       <section className="heritage-hero relative isolate min-h-[760px] overflow-hidden md:min-h-[820px]">
@@ -85,7 +89,7 @@ export default function HomeRoute() {
             <p className="font-serif text-3xl text-[#e7cb8e] md:text-4xl">{stat.value}</p><p className="mt-2 text-xs tracking-wide text-[#eee6d7]/60">{stat.label}</p>
           </article>)}
         </div>
-        <ExploreHeritageSection />
+        <ExploreHeritageSection favoriteMonumentIds={profile.activity.favoriteMonumentIds} onToggleFavorite={profile.toggleFavorite} onViewMonument={profile.recordViewedMonument} />
       </section>
 
       <section className="mx-auto max-w-[1440px] px-5 pb-24 md:px-10 xl:px-16">
@@ -95,14 +99,14 @@ export default function HomeRoute() {
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           {[["#timeline", "Time Machine", "Journey through the ages"], ["#guide", "AI History Guide", "Ask the stories that shaped us"], ["#quiz", "Test Your Knowledge", "A little history, a little wonder"]].map(([href, title, caption]) => <a key={title} href={href} className="rounded-lg border border-[#d7b879]/15 bg-[#211e19] p-5 transition-all hover:border-[#d7b879]/50 hover:bg-[#29241c]"><span className="font-serif text-lg text-[#e7d4ac]">{title}</span><span className="mt-1 block text-xs text-[#eee6d7]/55">{caption}</span></a>)}
-          <span id="profile" className="sr-only">Profile</span>
         </div>
       </section>
       <KnowledgeExplorerSection />
-      <TimeMachineSection />
+      <TimeMachineSection onExplore={profile.recordTimelineExploration} />
       <AIHistoryGuideSection />
       <VoiceCompanionSection />
-      <HistoryQuizSection />
+      <HistoryQuizSection onComplete={profile.recordQuizResult} />
+      <ProfileDashboardSection activity={profile.activity} hasLoaded={profile.hasLoaded} onClear={profile.clearActivity} onViewMonument={profile.recordViewedMonument} />
       <footer className="border-t border-[#d7b879]/10 px-5 py-6 text-center text-[10px] uppercase tracking-[.22em] text-[#eee6d7]/35">TimeTravel Heritage Explorer <span className="mx-2 text-[#d7b879]/50">·</span> Explore Forgotten Places. Travel Through Time. Discover Our History.</footer>
     </main>
   );

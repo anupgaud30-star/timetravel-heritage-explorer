@@ -65,7 +65,15 @@ function MonumentImage({ monument }: { monument: Monument }) {
   );
 }
 
-export function ExploreHeritageSection() {
+export function ExploreHeritageSection({
+  favoriteMonumentIds,
+  onToggleFavorite,
+  onViewMonument,
+}: {
+  favoriteMonumentIds: string[];
+  onToggleFavorite: (monumentId: string) => void;
+  onViewMonument: (monumentId: string) => void;
+}) {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Record<FilterKey, string>>({
     era: "all",
@@ -73,7 +81,7 @@ export function ExploreHeritageSection() {
     dynasty: "all",
     category: "all",
   });
-  const [favorites, setFavorites] = useState<Set<string>>(() => new Set());
+  const favorites = new Set(favoriteMonumentIds);
   const [selected, setSelected] = useState<Monument | null>(null);
 
   const filteredMonuments = useMemo(() => {
@@ -142,12 +150,7 @@ export function ExploreHeritageSection() {
                     type="button"
                     aria-label={isFavorite ? `Remove ${monument.name} from favorites` : `Add ${monument.name} to favorites`}
                     aria-pressed={isFavorite}
-                    onClick={() => setFavorites((current) => {
-                      const next = new Set(current);
-                      if (next.has(monument.id)) next.delete(monument.id);
-                      else next.add(monument.id);
-                      return next;
-                    })}
+                    onClick={() => onToggleFavorite(monument.id)}
                     className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b879] ${isFavorite ? "border-[#d7b879] bg-[#d7b879] text-[#211b12]" : "border-white/25 bg-[#171512]/60 text-[#f5ead5] hover:border-[#d7b879] hover:text-[#e4c47f]"}`}
                   >
                     <IconHeart className="h-4 w-4" fill={isFavorite ? "currentColor" : "none"} aria-hidden="true" />
@@ -166,7 +169,7 @@ export function ExploreHeritageSection() {
                     {monument.dynasty && <span className="rounded-full bg-white/[.045] px-2.5 py-1">{monument.dynasty}</span>}
                   </div>
                   <p className="mt-4 line-clamp-2 min-h-10 text-xs leading-5 text-[#eee6d7]/65">{monument.description}</p>
-                  <button type="button" onClick={() => setSelected(monument)} className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.16em] text-[#e4c47f] transition-colors hover:text-[#f4d99b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b879]">
+                  <button type="button" onClick={() => { setSelected(monument); onViewMonument(monument.id); }} className="mt-5 inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[.16em] text-[#e4c47f] transition-colors hover:text-[#f4d99b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7b879]">
                     Explore Details <IconArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>

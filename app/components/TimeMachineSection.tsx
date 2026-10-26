@@ -17,7 +17,11 @@ import {
 
 const defaultPeriod = historicalPeriods.find((period) => period.id === "mughal") ?? historicalPeriods[0];
 
-export function TimeMachineSection() {
+export function TimeMachineSection({
+  onExplore,
+}: {
+  onExplore: (exploration: { periodId: string; periodName: string; year: number; dynasty: string | null; eventTitle: string | null }) => void;
+}) {
   const [periodId, setPeriodId] = useState(defaultPeriod.id);
   const [year, setYear] = useState(defaultPeriod.startYear);
   const [dynasty, setDynasty] = useState("all");
@@ -133,7 +137,7 @@ export function TimeMachineSection() {
               </SelectContent>
             </Select>
           </label>
-          <button type="button" onClick={exploreEra} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#d7b879] px-5 text-[10px] font-semibold uppercase tracking-[.13em] text-[#211b12] transition-colors hover:bg-[#ead19a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f1dcae] focus-visible:ring-offset-2 focus-visible:ring-offset-[#171512]">
+          <button type="button" onClick={() => { onExplore({ periodId: period.id, periodName: period.name, year, dynasty: dynasty === "all" ? null : dynasty, eventTitle: selectedEvent?.title ?? null }); exploreEra(); }} className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-[#d7b879] px-5 text-[10px] font-semibold uppercase tracking-[.13em] text-[#211b12] transition-colors hover:bg-[#ead19a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f1dcae] focus-visible:ring-offset-2 focus-visible:ring-offset-[#171512]">
             Explore This Era <IconArrowDown className="h-4 w-4" aria-hidden="true" />
           </button>
           <div className="md:col-span-2 xl:col-span-5">

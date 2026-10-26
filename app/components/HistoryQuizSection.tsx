@@ -9,7 +9,11 @@ type AnswerRecord = {
   selectedOptionIndex: number;
 };
 
-export function HistoryQuizSection() {
+export function HistoryQuizSection({
+  onComplete,
+}: {
+  onComplete: (result: { score: number; total: number; difficulty: QuizDifficulty; category: QuizCategory | "all" }) => void;
+}) {
   const [difficulty, setDifficulty] = useState<QuizDifficulty>("Easy");
   const [category, setCategory] = useState<QuizCategory | "all">("all");
   const [started, setStarted] = useState(false);
@@ -51,6 +55,7 @@ export function HistoryQuizSection() {
 
   const nextQuestion = () => {
     if (questionIndex === questions.length - 1) {
+      onComplete({ score, total: questions.length, difficulty, category });
       setFinished(true);
       return;
     }
