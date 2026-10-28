@@ -58,16 +58,23 @@ function matchesPathPrefix(pathname: string, prefix: string): boolean {
   return pathname === prefix || pathname.startsWith(`${prefix}/`);
 }
 
+const VIEW_PATHS: Record<string, string> = {
+  home: "/",
+  explore: "/explore",
+  knowledge: "/knowledge",
+  timeline: "/timeline",
+  guide: "/guide",
+  voice: "/voice",
+  quiz: "/quiz",
+  profile: "/profile",
+};
+
 function viewForPath(pathname: string): string {
-  if (pathname === "/") return "home";
-  return "home";
+  const clean = pathname.replace(/\/+$/, "") || "/";
+  const match = Object.entries(VIEW_PATHS).find(([, path]) => path === clean);
+  return match ? match[0] : "home";
 }
 
 function pathForView(view?: string): string {
-  switch (view) {
-    case "home":
-      return "/";
-    default:
-      return "/";
-  }
+  return (view && VIEW_PATHS[view]) || "/";
 }

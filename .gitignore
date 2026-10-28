@@ -41,3 +41,16 @@ learnings.md
 .vercel/
 .agent-native/
 data/*.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+**/venv/
+.venv/
+**/.env
+**/.env.*
+!**/.env.example
+instance/
+**/instance/

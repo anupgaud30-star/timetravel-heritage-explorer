@@ -8,15 +8,19 @@ export type GuideAnswer = {
   sources: GuideSource[];
   mode: "demo" | "backend";
   notice?: string;
+  question?: string;
 };
 
 export type GuideChatRequest = {
-  message: string;
+  message?: string;
+  audio?: string;
+  mimeType?: string;
 };
 
 export type GuideChatResponse = {
   answer: string;
   sources?: GuideSource[];
+  question?: string;
 };
 
 export class GuideServiceError extends Error {
@@ -26,19 +30,19 @@ export class GuideServiceError extends Error {
   }
 }
 
-const apiBaseUrl = import.meta.env.VITE_AI_API_BASE_URL?.trim().replace(/\/+$/, "");
+const apiBaseUrl = (import.meta.env.VITE_AI_API_BASE_URL?.trim().replace(/\/+$/, "")) || "http://localhost:5050";
 
 const demoAnswers = [
   {
-    matches: ["hampi", "important city"],
+    matches: ["hampi", "vijayanagara"],
     answer: "Hampi was the ceremonial and commercial heart of the Vijayanagara Empire, especially from the 14th to 16th centuries. Its temples, pillared halls, market streets, water structures, and strategic setting by the Tungabhadra River record a major center of South Indian political life and trade. The city was sacked after the Battle of Talikota in 1565, though its monuments remain across a wide landscape. This is a curated demo summary, not a live AI answer.",
   },
   {
-    matches: ["maurya", "gupta", "compare"],
+    matches: ["maurya", "gupta", "ashoka"],
     answer: "The Maurya and Gupta empires were distinct states separated by several centuries. Maurya rule (c. 322–185 BCE) is associated with a large imperial administration and Ashoka's widely distributed inscriptions. Gupta power rose from around the 4th century CE and is noted in surviving records for court culture, regional alliances, and scholarship, including Aryabhata's work dated 499 CE. Dates and the extent of central control vary across regions and sources. This is a curated demo summary, not a live AI answer.",
   },
   {
-    matches: ["1526", "what was happening"],
+    matches: ["1526", "panipat", "babur"],
     answer: "In 1526, Babur defeated Ibrahim Lodi at the First Battle of Panipat, marking the beginning of Mughal rule in northern India. The transition was not instantaneous: Mughal authority was consolidated over subsequent decades. This is a curated demo summary, not a live AI answer.",
   },
   {
@@ -49,7 +53,7 @@ const demoAnswers = [
 
 export function getCuratedDemoAnswer(message: string): GuideAnswer {
   const query = message.toLocaleLowerCase();
-  const match = demoAnswers.find((entry) => entry.matches.every((term) => query.includes(term)));
+  const match = demoAnswers.find((entry) => entry.matches.some((term) => query.includes(term)));
   return {
     answer: match?.answer ?? "Demo mode is active and this question is not covered by the curated sample answers. No live AI or historical database is connected, so I won't invent an answer or citations. Try one of the suggested questions.",
     sources: [],
@@ -76,11 +80,11 @@ function isSafeSourceUrl(value: string) {
 }
 
 export async function askHistoryGuide(input: GuideChatRequest, signal?: AbortSignal): Promise<GuideAnswer> {
-  if (!apiBaseUrl) return getCuratedDemoAnswer(input.message);
+  const targetUrl = apiBaseUrl ? `${apiBaseUrl}/api/ai/chat` : "/api/ai/chat";
 
   let response: Response;
   try {
-    response = await fetch(`${apiBaseUrl}/api/ai/chat`, {
+    response = await fetch(targetUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
@@ -107,6 +111,7 @@ export async function askHistoryGuide(input: GuideChatRequest, signal?: AbortSig
 
   return {
     answer: payload.answer,
+    question: payload.question,
     sources: (payload.sources ?? []).filter((source) => isSafeSourceUrl(source.url)),
     mode: "backend",
   };
