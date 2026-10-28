@@ -43,6 +43,7 @@ learnings.md
 data/*.lock
 
 # Python
+voice-agent-python/
 __pycache__/
 *.py[cod]
 *$py.class
