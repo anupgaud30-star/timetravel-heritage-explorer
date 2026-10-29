@@ -55,3 +55,4 @@ venv/
 !**/.env.example
 instance/
 **/instance/
+.env.local

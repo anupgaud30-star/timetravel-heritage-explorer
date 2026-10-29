@@ -46,6 +46,8 @@
     "zod": "^4.4.3",
     "zustand": "^5.0.15",
     "@neondatabase/serverless": "^1.0.2",
+    "@supabase/supabase-js": "^2.50.0",
+    "@supabase/ssr": "^0.6.1",
     "dotenv": "^17.2.1",
     "postgres": "^3.4.9",
     "@react-router/dev": "8.1.0",

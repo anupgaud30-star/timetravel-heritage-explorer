@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
+import { IconLoader2, IconUser, IconLogout } from "@tabler/icons-react";
 
 import { useProfileActivity } from "@/lib/profile-activity";
+import { useAuth } from "@/hooks/use-auth";
 
 export type SiteContext = ReturnType<typeof useProfileActivity>;
 
@@ -22,6 +24,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 export function SiteShell() {
   const profile = useProfileActivity();
   const { pathname } = useLocation();
+  const { user, loading: authLoading, signOut } = useAuth();
 
   // Each page starts at the top when navigating between routes.
   useEffect(() => {
@@ -42,9 +45,52 @@ export function SiteShell() {
           <nav className="hidden items-center gap-5 lg:flex" aria-label="Main navigation">
             {navItems.map((item) => <NavLink key={item.to} to={item.to} end={item.to === "/"} className={linkClass}>{item.label}</NavLink>)}
           </nav>
+          {/* Auth button */}
+          <div className="ml-4 hidden lg:flex items-center">
+            {authLoading ? (
+              <IconLoader2 className="h-4 w-4 animate-spin text-[#d7b879]/60" />
+            ) : user ? (
+              <div className="flex items-center gap-2">
+                <NavLink to="/profile" className="flex items-center gap-2 rounded-full border border-[#d7b879]/30 px-3 py-1.5 text-[11px] uppercase tracking-[.13em] text-[#e7d4ac] hover:border-[#d7b879]/60 transition-colors">
+                  <IconUser className="h-3.5 w-3.5" aria-hidden="true" />
+                  {user.user_metadata?.display_name ?? user.email?.split("@")[0] ?? "Profile"}
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={signOut}
+                  aria-label="Sign out"
+                  className="rounded-full border border-[#d7b879]/20 p-1.5 text-[#eee6d7]/50 hover:border-[#d99b84]/60 hover:text-[#e0a394] transition-colors"
+                >
+                  <IconLogout className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="rounded-full bg-[#d7b879] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[.13em] text-[#211b12] hover:bg-[#eed69f] transition-colors"
+              >
+                Sign in
+              </Link>
+            )}
+          </div>
         </div>
         <nav className="flex gap-5 overflow-x-auto border-t border-white/5 px-5 py-2.5 lg:hidden" aria-label="Mobile navigation">
           {navItems.map((item) => <NavLink key={item.to} to={item.to} end={item.to === "/"} className={(state) => `shrink-0 ${linkClass(state)}`}>{item.label}</NavLink>)}
+          {!authLoading && (
+            user ? (
+              <button
+                type="button"
+                onClick={signOut}
+                className="shrink-0 whitespace-nowrap rounded px-1 py-1 text-xs font-medium tracking-wide text-[#eee6d7]/80 transition-colors hover:text-[#e2bf75]"
+              >
+                Sign out
+              </button>
+            ) : (
+              <NavLink to="/login" className={(state) => `shrink-0 ${linkClass(state)}`}>
+                Sign in
+              </NavLink>
+            )
+          )}
         </nav>
       </header>
       <main id="main-content" tabIndex={-1} className="focus:outline-none">
