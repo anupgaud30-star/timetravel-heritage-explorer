@@ -1,10 +1,8 @@
 -- TimeTravel Heritage Explorer — Supabase Schema
 -- Run this in Supabase Dashboard → SQL Editor → New query → Run
--- (or paste into supabase/migrations/001_init.sql and use supabase db push)
 
 -- ────────────────────────────────────────────────
 -- 1. PROFILES
---    Mirrors auth.users; populated via trigger below.
 -- ────────────────────────────────────────────────
 create table if not exists public.profiles (
   id           uuid primary key references auth.users on delete cascade,
@@ -15,13 +13,17 @@ create table if not exists public.profiles (
   updated_at   timestamptz not null default now()
 );
 
--- Row-Level Security: users can only see/update their own profile.
 alter table public.profiles enable row level security;
+
+drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own" on public.profiles for select using (auth.uid() = id);
+
+drop policy if exists "profiles_insert_own" on public.profiles;
 create policy "profiles_insert_own" on public.profiles for insert with check (auth.uid() = id);
+
+drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles for update using (auth.uid() = id);
 
--- Auto-create profile row on new user sign-up.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
@@ -54,6 +56,8 @@ create table if not exists public.user_favorites (
 );
 
 alter table public.user_favorites enable row level security;
+
+drop policy if exists "favorites_all_own" on public.user_favorites;
 create policy "favorites_all_own" on public.user_favorites
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
@@ -69,11 +73,12 @@ create table if not exists public.user_history (
 );
 
 alter table public.user_history enable row level security;
+
+drop policy if exists "history_all_own" on public.user_history;
 create policy "history_all_own" on public.user_history
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
--- Index for fast recent-history lookups
 create index if not exists user_history_user_visited
   on public.user_history (user_id, visited_at desc);
 
@@ -91,6 +96,8 @@ create table if not exists public.quiz_results (
 );
 
 alter table public.quiz_results enable row level security;
+
+drop policy if exists "quiz_results_all_own" on public.quiz_results;
 create policy "quiz_results_all_own" on public.quiz_results
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
