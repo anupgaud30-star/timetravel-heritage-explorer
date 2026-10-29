@@ -3,6 +3,14 @@
   "onboarding": {
     "firstRun": "off"
   },
+  "runtime": {
+    "auth": {
+      "enabled": false
+    },
+    "database": {
+      "required": false
+    }
+  },
   "doctor": {
     "failOnBuild": false
   }
