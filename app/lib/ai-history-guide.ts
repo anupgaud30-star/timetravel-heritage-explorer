@@ -30,7 +30,7 @@ export class GuideServiceError extends Error {
   }
 }
 
-const apiBaseUrl = (import.meta.env.VITE_AI_API_BASE_URL?.trim().replace(/\/+$/, "")) || "http://localhost:5050";
+const apiBaseUrl = (import.meta.env.VITE_AI_API_BASE_URL?.trim().replace(/\/+$/, "")) || "";
 
 const demoAnswers = [
   {
